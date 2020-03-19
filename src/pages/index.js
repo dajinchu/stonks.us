@@ -1,21 +1,33 @@
-import React from "react"
-import { Link } from "gatsby"
+import React from 'react';
+import { graphql } from 'gatsby';
+import Img from 'gatsby-image';
 
-import Layout from "../components/layout"
-import Image from "../components/image"
-import SEO from "../components/seo"
-
-const IndexPage = () => (
-  <Layout>
-    <SEO title="Home" />
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
-      <Image />
+export default ({ data }) => {
+  const isUp = data.allStonk.edges[0].node.isGoingUp;
+  const image = data.file.childImageSharp.fluid;
+  return (
+    <div style={{ width: 960, margin: "4rem auto" }}>
+      {isUp ? "stonks are UP today" : "uh oh poo poo"}
+      <Img fluid={image} />
     </div>
-    <Link to="/page-2/">Go to page 2</Link>
-  </Layout>
-)
+  )
+}
 
-export default IndexPage
+export const query = graphql`
+  query Stonks {
+    allStonk {
+      edges {
+        node {
+          isGoingUp
+        }
+      }
+    }
+    file(relativePath: { eq: "up.png"}) {
+      childImageSharp {
+        fluid {
+          ... GatsbyImageSharpFluid
+        }
+      }
+    }
+  }
+`
