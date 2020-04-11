@@ -4,11 +4,12 @@ import Img from 'gatsby-image';
 
 export default ({ data }) => {
   const isUp = data.allStonk.edges[0].node.isGoingUp;
-  const image = data.file.childImageSharp.fluid;
+  const imageUp = data.up.childImageSharp.fluid;
+  const imageDown = data.down.childImageSharp.fluid;
   return (
     <div style={{ width: 960, margin: "4rem auto" }}>
       {isUp ? "stonks are UP today" : "uh oh poo poo"}
-      <Img fluid={image} />
+      <Img fluid={isUp ? imageUp : imageDown} />
     </div>
   )
 }
@@ -22,7 +23,14 @@ export const query = graphql`
         }
       }
     }
-    file(relativePath: { eq: "up.png"}) {
+    up: file(relativePath: { eq: "up.png"}) {
+      childImageSharp {
+        fluid {
+          ... GatsbyImageSharpFluid
+        }
+      }
+    }
+    down: file(relativePath: { eq: "down.png"}) {
       childImageSharp {
         fluid {
           ... GatsbyImageSharpFluid
